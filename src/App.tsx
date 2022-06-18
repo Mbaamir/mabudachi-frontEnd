@@ -1,7 +1,13 @@
-import Home from "./Home/Home";
+import Navbar from "./Layouts/Navbar/Navbar";
+import Home from "./Pages/Home/Home";
 
 function App() {
-  return <Home />;
+  return (
+    <>
+      <Navbar />
+      <Home />
+    </>
+  );
 }
 
 export default App;
