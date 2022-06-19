@@ -1,4 +1,4 @@
-import socialMediaObjectsArray from "../NavbarInputs/SocialMedia/socialMedia";
+import socialMediaObjectsArray from "../../Inputs/SocialMedia/socialMedia";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -22,6 +22,11 @@ const enum relEnum {
   noreferrer = "noreferrer",
 }
 
+export const enum containerTypeEnum {
+  Box = "Box",
+  Grid = "Grid",
+}
+
 interface SmIconButtonProps extends IconButtonProps {
   href: string;
   target: targetEnum.blank;
@@ -40,17 +45,23 @@ const SmIconButton = styled(IconButton, {
 }));
 
 export interface ISocialMediaBoxProps {
+  layout: containerTypeEnum;
+  xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
   iconColor?: string;
   iconSize?: string;
-  maxWidth?: string;
 }
 
-interface smContainerPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
+interface socMedContainerPropsInterface
+  extends HTMLAttributes<HTMLOrSVGElement> {
   as: ComponentType;
   container?: boolean;
 }
 
-const SmContainer: FC<smContainerPropsInterface> = ({
+const SocMedContainer: FC<socMedContainerPropsInterface> = ({
   as: Tag = Box,
   children,
   ...otherProps
@@ -58,13 +69,13 @@ const SmContainer: FC<smContainerPropsInterface> = ({
   return <Tag {...otherProps}>{children}</Tag>;
 };
 
-interface smItemPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
+interface socMedItemPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
   as: ComponentType | ElementType;
   item?: boolean;
   xs?: number;
 }
 
-const SmItem: FC<smItemPropsInterface> = ({
+const SocMedItem: FC<socMedItemPropsInterface> = ({
   as: Tag = Fragment,
   children,
   ...otherProps
@@ -73,24 +84,34 @@ const SmItem: FC<smItemPropsInterface> = ({
 };
 
 export default function SocialMediaBox(props: ISocialMediaBoxProps) {
-  const theme = useTheme();
-  const isSmallerThanMd = useMediaQuery(theme.breakpoints.down("md"));
+  const layout = props.layout;
+  const xs = props.xs;
 
-  let smItemProps = isSmallerThanMd
-    ? {
-        as: Grid,
-        item: true,
-        xs: 6,
-      }
-    : {
-        as: Fragment,
-      };
+  const socMedItemProps =
+    layout === "Grid"
+      ? {
+          as: Grid,
+          item: true,
+          xs: props.xs,
+        }
+      : {
+          as: Fragment,
+        };
+
+  const SocMedContainerProps =
+    layout === "Grid"
+      ? {
+          as: Grid,
+          container: true,
+        }
+      : {
+          as: Box,
+        };
 
   const iconColor = props.iconColor;
-  const maxWidth = props.maxWidth;
   let iconSize = props.iconSize;
 
-  if (!iconSize && !isSmallerThanMd) {
+  if (!iconSize) {
     let numberOfIcons = socialMediaObjectsArray.length;
     const shrinkBy: number = numberOfIcons / 4;
     let calculatedIconSize: number = 30 / shrinkBy;
@@ -99,10 +120,10 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
   }
 
   return (
-    <SmContainer as={isSmallerThanMd ? Grid : Box} container={isSmallerThanMd}>
+    <SocMedContainer {...SocMedContainerProps}>
       {socialMediaObjectsArray.map((item: any, index: number) => {
         return (
-          <SmItem {...smItemProps} key={`${item.url}_${index}`}>
+          <SocMedItem {...socMedItemProps} key={`${item.url}_${index}`}>
             <SmIconButton
               href={item.url}
               target={targetEnum.blank}
@@ -112,9 +133,9 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
             >
               {item.icon}
             </SmIconButton>
-          </SmItem>
+          </SocMedItem>
         );
       })}
-    </SmContainer>
+    </SocMedContainer>
   );
 }

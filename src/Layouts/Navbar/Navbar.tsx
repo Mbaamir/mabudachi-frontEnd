@@ -1,49 +1,44 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
+import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import { styled } from "@mui/material";
 import SocialMediaBox from "./SocialMediaBox/SocialMediaBox";
+import { containerTypeEnum } from "./SocialMediaBox/SocialMediaBox";
 
 const pages = ["Products", "Pricing", "Blog"];
 
+interface styledNavbarPropsInterface extends AppBarProps {
+  navbarColor?: string;
+}
+
+const StyledNavbar = styled(AppBar)<styledNavbarPropsInterface>(
+  ({ navbarColor, theme }) => ({
+    backgroundColor: navbarColor || theme.palette.primary.main,
+  })
+);
+
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
-    <AppBar position="static">
+    <StyledNavbar position="static" navbarColor="#111122">
       <Toolbar>
-        <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-
+      
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
@@ -55,32 +50,7 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            open={Boolean(anchorElNav)}
-            onClose={handleCloseNavMenu}
-            sx={{
-              display: { xs: "block", md: "none" },
-            }}
-          >
-            {pages.map((page) => (
-              <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">{page}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
         </Box>
-
         <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}>
           {pages.map((page) => (
             <Button
@@ -93,10 +63,10 @@ const Navbar = () => {
           ))}
         </Box>
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <SocialMediaBox iconColor="#F166A1" />
+          <SocialMediaBox layout={containerTypeEnum.Box} />
         </Box>
       </Toolbar>
-    </AppBar>
+    </StyledNavbar>
   );
 };
 export default Navbar;
