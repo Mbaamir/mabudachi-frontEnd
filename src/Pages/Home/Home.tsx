@@ -1,10 +1,11 @@
 import { Button, Typography } from "@mui/material";
-import {
-  init,
-  useConnectWallet,
-  useSetChain,
-  useWallets,
-} from "@web3-onboard/react";
+import SocialMediaBox from "../../Layouts/Navbar/SocialMediaBox/SocialMediaBox";
+// import {
+//   init,
+//   useConnectWallet,
+//   useSetChain,
+//   useWallets,
+// } from "@web3-onboard/react";
 import injectedModule from "@web3-onboard/injected-wallets";
 import walletConnectModule from "@web3-onboard/walletconnect";
 import { useState } from "react";
