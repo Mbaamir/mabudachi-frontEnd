@@ -2,7 +2,6 @@
   "name": "mabudachi-frontend",
   "license": "MIT",
   "version": "0.1.2",
-  "private": false,
   "dependencies": {
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.1",
@@ -70,5 +69,6 @@
   },
   "resolutions": {
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }
