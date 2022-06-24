@@ -8,7 +8,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material";
 import SocialMediaBox from "./SocialMediaBox/SocialMediaBox";
-import { containerTypeEnum } from "./SocialMediaBox/SocialMediaBox";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -38,7 +37,6 @@ const Navbar = () => {
   return (
     <StyledNavbar position="static" navbarColor="#111122">
       <Toolbar>
-      
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
@@ -62,9 +60,12 @@ const Navbar = () => {
             </Button>
           ))}
         </Box>
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <SocialMediaBox layout={containerTypeEnum.Box} />
-        </Box>
+
+        <SocialMediaBox
+          layout="Box"
+          iconColor="orange"
+          hideBelow="sm"
+        />
       </Toolbar>
     </StyledNavbar>
   );

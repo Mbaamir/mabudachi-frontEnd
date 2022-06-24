@@ -2,37 +2,26 @@ import socialMediaObjectsArray from "../../Inputs/SocialMedia/socialMedia";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   FC,
-  useState,
+  createElement,
   ComponentType,
   HTMLAttributes,
   ElementType,
   Fragment,
 } from "react";
 
-const enum targetEnum {
-  blank = "_blank",
-}
+type gridItemWidth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 11 | 12;
 
-const enum relEnum {
-  noopener = "noopener",
-  noreferrer = "noreferrer",
-}
-
-export const enum containerTypeEnum {
-  Box = "Box",
-  Grid = "Grid",
-}
+type breakpointsType = "xs" | "sm" | "md" | "lg" | "xl";
 
 interface SmIconButtonProps extends IconButtonProps {
   href: string;
-  target: targetEnum.blank;
-  rel: relEnum;
   iconColor?: string;
   iconSize?: string;
+  target: "_blank";
+  rel: "noreferrer";
 }
 
 const SmIconButton = styled(IconButton, {
@@ -44,24 +33,48 @@ const SmIconButton = styled(IconButton, {
   fontSize: iconSize || "24px",
 }));
 
-export interface ISocialMediaBoxProps {
-  layout: containerTypeEnum;
-  xs?: number;
-  sm?: number;
-  md?: number;
-  lg?: number;
-  xl?: number;
+export interface ISocialMediaBase {
   iconColor?: string;
   iconSize?: string;
 }
 
+export interface ISocialMediaBoxBase extends ISocialMediaBase {
+  layout: "Box";
+}
+
+export interface ISocialMediaGridBase extends ISocialMediaBase {
+  layout: "Grid";
+  xsWidth?: gridItemWidth;
+  smWidth?: gridItemWidth;
+  mdWidth?: gridItemWidth;
+  lgWidth?: gridItemWidth;
+  xlWidth?: gridItemWidth;
+}
+
+export interface gridObjectInterface {
+  sx: Object;
+}
+
+type ISocialMediaBoxFixed = ISocialMediaBoxBase | ISocialMediaGridBase;
+
+type ISocialMediaBoxHideBelow = ISocialMediaBoxFixed & {
+  hideBelow?: breakpointsType;
+  hideAbove?: never;
+};
+
+type ISocialMediaBoxHideAbove = ISocialMediaBoxFixed & {
+  hideBelow?: never;
+  hideAbove?: breakpointsType;
+};
+
+type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
+
 interface socMedContainerPropsInterface
   extends HTMLAttributes<HTMLOrSVGElement> {
   as: ComponentType;
-  container?: boolean;
 }
 
-const SocMedContainer: FC<socMedContainerPropsInterface> = ({
+const SocMedBoxContainer: FC<socMedContainerPropsInterface> = ({
   as: Tag = Box,
   children,
   ...otherProps
@@ -84,27 +97,67 @@ const SocMedItem: FC<socMedItemPropsInterface> = ({
 };
 
 export default function SocialMediaBox(props: ISocialMediaBoxProps) {
+  // if (!socialMediaObjectsArray) return;
+
   const layout = props.layout;
-  const xs = props.xs;
+  const hideAbove = props.hideAbove;
+  const hideBelow = props.hideBelow;
+
+  let sx = {
+    display: { xs: "flex", sm: "flex", md: "flex", lg: "flex", xl: "flex" },
+  };
+
+  type displayType = keyof typeof sx.display;
+
+  if (hideBelow) {
+    let areAllSetToHide = false;
+    let hideBelowVal: displayType = hideBelow;
+    let display = sx.display;
+    for (let key in display) {
+      if (key === hideBelowVal) {
+        areAllSetToHide = true;
+      }
+      if (areAllSetToHide) break;
+      display[key as keyof typeof display] = "none";
+      console.log(display);
+    }
+  }
+
+  if (hideAbove) {
+    let areAllSkipped = false;
+    let hideAboveVal: displayType = hideAbove;
+    let display = sx.display;
+    for (let key in display) {
+      if (key === hideAboveVal) {
+        areAllSkipped = true;
+      }
+      if (areAllSkipped) {
+        display[key as keyof typeof display] = "none";
+      }
+      console.log(display);
+    }
+  }
 
   const socMedItemProps =
     layout === "Grid"
       ? {
           as: Grid,
           item: true,
-          xs: props.xs,
+          xs: props.xsWidth,
+          sm: props.smWidth,
+          md: props.mdWidth,
+          lg: props.lgWidth,
+          xl: props.xlWidth,
         }
       : {
           as: Fragment,
         };
 
-  const SocMedContainerProps =
+  const SocMedBoxContainerProps =
     layout === "Grid"
-      ? {
-          as: Grid,
-          container: true,
-        }
+      ? { sx, as: Grid }
       : {
+          sx,
           as: Box,
         };
 
@@ -120,22 +173,22 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
   }
 
   return (
-    <SocMedContainer {...SocMedContainerProps}>
+    <SocMedBoxContainer {...SocMedBoxContainerProps}>
       {socialMediaObjectsArray.map((item: any, index: number) => {
         return (
           <SocMedItem {...socMedItemProps} key={`${item.url}_${index}`}>
             <SmIconButton
               href={item.url}
-              target={targetEnum.blank}
-              rel={relEnum.noopener}
+              target="_blank"
+              rel="noreferrer"
               iconColor={iconColor}
               iconSize={iconSize}
             >
-              {item.icon}
+              {createElement(item.icon)}
             </SmIconButton>
           </SocMedItem>
         );
       })}
-    </SocMedContainer>
+    </SocMedBoxContainer>
   );
 }
