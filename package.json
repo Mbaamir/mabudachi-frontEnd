@@ -1,7 +1,7 @@
 {
   "name": "mabudachi-frontend",
   "license": "MIT",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "dependencies": {
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.1",
