@@ -1,4 +1,5 @@
-import * as React from "react";
+import SocialMedia from "./SocialMediaBox/SocialMedia";
+import Pages from "./Pages/Pages";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,9 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material";
-import SocialMediaBox from "./SocialMediaBox/SocialMediaBox";
-
-const pages = ["Products", "Pricing", "Blog"];
+import * as React from "react";
 
 interface styledNavbarPropsInterface extends AppBarProps {
   navbarColor?: string;
@@ -51,20 +50,11 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
         </Box>
-        <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}>
-          {pages.map((page) => (
-            <Button
-              key={page}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              {page}
-            </Button>
-          ))}
-        </Box>
+
+        <Pages layout="Box" containerWidth="30%"/>
 
         {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
-        <SocialMediaBox layout="Grid" hideAbove="md" xsWidth={6}/>
+        <SocialMedia layout="Box" hideBelow="sm" />
       </Toolbar>
     </StyledNavbar>
   );
