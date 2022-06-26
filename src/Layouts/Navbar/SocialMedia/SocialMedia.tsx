@@ -1,4 +1,4 @@
-import socialMediaObjectsArray from "../../Inputs/SocialMedia/socialMedia";
+import socialMediaObjectsArray from "../../Inputs/SocialMediaList/socialMediaList";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -46,6 +46,10 @@ export interface ISocialMediaBase {
   iconColor?: string;
   iconSize?: string;
   iconColorOnHover?: string;
+  containerWidth?: string;
+  marginLeft?: string;
+  marginRight?: string;
+
 }
 
 export interface ISocialMediaBoxBase extends ISocialMediaBase {
@@ -77,12 +81,12 @@ type ISocialMediaBoxHideAbove = ISocialMediaBoxFixed & {
   hideAbove?: breakpointsType;
 };
 
+type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
+
 interface socMedContainerPropsInterface
   extends HTMLAttributes<HTMLOrSVGElement> {
   as: ComponentType;
 }
-
-type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
 
 const SocMedBoxContainer: FC<socMedContainerPropsInterface> = ({
   as: Tag = Box,
@@ -98,6 +102,26 @@ interface socMedItemPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
   xs?: number;
 }
 
+type justifyContentType = "space-between" | "space-around";
+
+
+const sxDefaultDisplay = {
+  xs: "flex",
+  sm: "flex",
+  md: "flex",
+  lg: "flex",
+  xl: "flex",
+};
+
+interface sxInterface {
+  width?: string;
+  marginLeft?: string;
+  marginRight?: string;
+  display: typeof sxDefaultDisplay;
+  justifyContent?: justifyContentType;
+}
+
+
 const SocMedItem: FC<socMedItemPropsInterface> = ({
   as: Tag = Fragment,
   children,
@@ -106,17 +130,30 @@ const SocMedItem: FC<socMedItemPropsInterface> = ({
   return <Tag {...otherProps}>{children}</Tag>;
 };
 
-export default function SocialMediaBox(props: ISocialMediaBoxProps) {
+
+export default function SocialMedia(props: ISocialMediaBoxProps) {
   const layout = props.layout;
   const hideAbove = props.hideAbove;
   const hideBelow = props.hideBelow;
   const iconColor = props.iconColor;
   const iconColorOnHover = props.iconColorOnHover;
   let iconSize = props.iconSize;
+  const containerWidth = props.containerWidth;
+  const marginLeft = props.marginLeft;
+  const marginRight = props.marginRight;
 
-  let sx = {
-    display: { xs: "flex", sm: "flex", md: "flex", lg: "flex", xl: "flex" },
+
+  let sx: sxInterface = {
+    display: sxDefaultDisplay,
+    
+    width: containerWidth,
+    marginLeft: marginLeft,
+    marginRight: marginRight,
   };
+
+  if (layout === "Box") {
+    sx.justifyContent = "space-around";
+  }
 
   type displayType = keyof typeof sx.display;
 
@@ -180,7 +217,7 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
 
   return (
     <SocMedBoxContainer {...SocMedBoxContainerProps}>
-      {socialMediaObjectsArray.map((item: any, index: number) => {
+      {socialMediaObjectsArray.map((item, index: number) => {
         return (
           <SocMedItem {...socMedItemProps} key={`${item.url}_${index}`}>
             <SmIconButton

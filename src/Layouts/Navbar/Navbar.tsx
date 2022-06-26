@@ -6,9 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material";
-import SocialMediaBox from "./SocialMediaBox/SocialMediaBox";
-
-const pages = ["Products", "Pricing", "Blog"];
+import SocialMedia from "./SocialMedia/SocialMedia";
 
 interface styledNavbarPropsInterface extends AppBarProps {
   navbarColor?: string;
@@ -24,17 +22,7 @@ const StyledNavbar = styled(AppBar, {
 }));
 
 const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
 
   return (
     <StyledNavbar position="static" navbarColor="#080708">
@@ -45,26 +33,15 @@ const Navbar = () => {
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={handleOpenNavMenu}
             color="inherit"
           >
             <MenuIcon />
           </IconButton>
         </Box>
-        <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}>
-          {pages.map((page) => (
-            <Button
-              key={page}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              {page}
-            </Button>
-          ))}
-        </Box>
+       
 
         {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
-        <SocialMediaBox layout="Grid" hideAbove="md" xsWidth={6}/>
+        <SocialMedia layout="Box" hideBelow="md" containerWidth="20%"/>
       </Toolbar>
     </StyledNavbar>
   );
