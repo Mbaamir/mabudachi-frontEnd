@@ -1,7 +1,11 @@
 import { FaGithub, FaDiscord, FaTwitter, FaInstagram } from "react-icons/fa";
 import { IconType } from "react-icons";
 
-// Add Social Media Objects as per the interface here. Then include it in the array->socialMediaObjectsArray at the bottom.
+// Add Social Media Objects as per the interface here.
+    //Then include it in the array->socialMediaObjectsArray at the bottom.
+//I recommend importing Icons from react-icons
+    //They have a large collection, and tree shaking. 
+      //You can include custom Icons too but adjust the typing
 
 export interface socialMediaObject {
   name: string;

@@ -20,22 +20,32 @@ interface SmIconButtonProps extends IconButtonProps {
   href: string;
   iconColor?: string;
   iconSize?: string;
+  iconColorOnHover?: string;
   target: "_blank";
   rel: "noreferrer";
 }
 
 const SmIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => {
-    return prop !== "iconColor" && prop !== "iconSize";
+    return (
+      prop !== "iconColor" && prop !== "iconSize" && prop !== "iconColorOnHover"
+    );
   },
-})<SmIconButtonProps>(({ iconSize, iconColor, theme }) => ({
+})<SmIconButtonProps>(({ iconSize, iconColor, theme, iconColorOnHover }) => ({
   color: iconColor || theme.palette.primary.main,
   fontSize: iconSize || "24px",
+  "&:hover": {
+    color:
+      iconColorOnHover ||
+      theme.palette.primaryHighlight?.main ||
+      theme.palette.primary.light,
+  },
 }));
 
 export interface ISocialMediaBase {
   iconColor?: string;
   iconSize?: string;
+  iconColorOnHover?: string;
 }
 
 export interface ISocialMediaBoxBase extends ISocialMediaBase {
@@ -67,12 +77,12 @@ type ISocialMediaBoxHideAbove = ISocialMediaBoxFixed & {
   hideAbove?: breakpointsType;
 };
 
-type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
-
 interface socMedContainerPropsInterface
   extends HTMLAttributes<HTMLOrSVGElement> {
   as: ComponentType;
 }
+
+type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
 
 const SocMedBoxContainer: FC<socMedContainerPropsInterface> = ({
   as: Tag = Box,
@@ -97,11 +107,12 @@ const SocMedItem: FC<socMedItemPropsInterface> = ({
 };
 
 export default function SocialMediaBox(props: ISocialMediaBoxProps) {
-  // if (!socialMediaObjectsArray) return;
-
   const layout = props.layout;
   const hideAbove = props.hideAbove;
   const hideBelow = props.hideBelow;
+  const iconColor = props.iconColor;
+  const iconColorOnHover = props.iconColorOnHover;
+  let iconSize = props.iconSize;
 
   let sx = {
     display: { xs: "flex", sm: "flex", md: "flex", lg: "flex", xl: "flex" },
@@ -119,7 +130,6 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
       }
       if (areAllSetToHide) break;
       display[key as keyof typeof display] = "none";
-      console.log(display);
     }
   }
 
@@ -134,7 +144,6 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
       if (areAllSkipped) {
         display[key as keyof typeof display] = "none";
       }
-      console.log(display);
     }
   }
 
@@ -155,14 +164,11 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
 
   const SocMedBoxContainerProps =
     layout === "Grid"
-      ? { sx, as: Grid }
+      ? { sx, as: Grid, container: true }
       : {
           sx,
           as: Box,
         };
-
-  const iconColor = props.iconColor;
-  let iconSize = props.iconSize;
 
   if (!iconSize) {
     let numberOfIcons = socialMediaObjectsArray.length;
@@ -183,6 +189,7 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
               rel="noreferrer"
               iconColor={iconColor}
               iconSize={iconSize}
+              iconColorOnHover={iconColorOnHover}
             >
               {createElement(item.icon)}
             </SmIconButton>
