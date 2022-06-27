@@ -1,16 +1,16 @@
 import Pages from "./Pages/Pages";
-import AppBar, { AppBarProps } from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
+import SocialMedia from "./SocialMedia/SocialMedia";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material";
-import SocialMedia from "./SocialMedia/SocialMedia";
+=======
+
 
 interface styledNavbarPropsInterface extends AppBarProps {
   navbarColor?: string;
 }
+
 
 // Apply Styling to Navbar Here
 const StyledNavbar = styled(AppBar, {
@@ -26,6 +26,7 @@ const Navbar = () => {
 
   return (
     <StyledNavbar position="static" navbarColor="#080708">
+
       <Toolbar>
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
@@ -38,11 +39,12 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
         </Box>
+        
+         {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
 
         <Pages layout="Box" containerWidth="30%"/>
-
-        {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
         <SocialMedia layout="Box" hideBelow="sm" />
+        
       </Toolbar>
     </StyledNavbar>
   );
