@@ -1,4 +1,6 @@
-import * as React from "react";
+import NavbarDrawer from "./Drawer/Drawer";
+import SocialMedia from "./Sections/SocialMedia/SocialMedia";
+import Pages from "./Sections/Pages/Pages";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material";
-import SocialMedia from "./SocialMedia/SocialMedia";
+import { useState } from "react";
 
 interface styledNavbarPropsInterface extends AppBarProps {
   navbarColor?: string;
@@ -22,8 +24,7 @@ const StyledNavbar = styled(AppBar, {
 }));
 
 const Navbar = () => {
-
-
+  const [isDrawerOpenState, setIsDrawerOpenState] = useState(false);
   return (
     <StyledNavbar position="static" navbarColor="#080708">
       <Toolbar>
@@ -34,6 +35,7 @@ const Navbar = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             color="inherit"
+            onClick={() => setIsDrawerOpenState(true)}
           >
             <MenuIcon />
           </IconButton>

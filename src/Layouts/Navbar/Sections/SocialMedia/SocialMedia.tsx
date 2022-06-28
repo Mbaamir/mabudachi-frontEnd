@@ -1,4 +1,4 @@
-import socialMediaObjectsArray from "../../Inputs/SocialMediaList/socialMediaList";
+import socialMediaObjectsArray from "../../../Inputs/SocialMediaList/socialMediaList";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -10,6 +10,8 @@ import {
   HTMLAttributes,
   ElementType,
   Fragment,
+  useState,
+  useLayoutEffect,
 } from "react";
 
 type gridItemWidth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 11 | 12;
@@ -49,7 +51,6 @@ export interface ISocialMediaBase {
   containerWidth?: string;
   marginLeft?: string;
   marginRight?: string;
-
 }
 
 export interface ISocialMediaBoxBase extends ISocialMediaBase {
@@ -104,23 +105,13 @@ interface socMedItemPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
 
 type justifyContentType = "space-between" | "space-around";
 
-
-const sxDefaultDisplay = {
-  xs: "flex",
-  sm: "flex",
-  md: "flex",
-  lg: "flex",
-  xl: "flex",
-};
-
 interface sxInterface {
   width?: string;
   marginLeft?: string;
   marginRight?: string;
-  display: typeof sxDefaultDisplay;
+  display: any;
   justifyContent?: justifyContentType;
 }
-
 
 const SocMedItem: FC<socMedItemPropsInterface> = ({
   as: Tag = Fragment,
@@ -130,11 +121,11 @@ const SocMedItem: FC<socMedItemPropsInterface> = ({
   return <Tag {...otherProps}>{children}</Tag>;
 };
 
-
 export default function SocialMedia(props: ISocialMediaBoxProps) {
   const layout = props.layout;
   const hideAbove = props.hideAbove;
   const hideBelow = props.hideBelow;
+
   const iconColor = props.iconColor;
   const iconColorOnHover = props.iconColorOnHover;
   let iconSize = props.iconSize;
@@ -142,47 +133,29 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
   const marginLeft = props.marginLeft;
   const marginRight = props.marginRight;
 
-
-  let sx: sxInterface = {
-    display: sxDefaultDisplay,
-    
+  const [sxState, setSxState] = useState<sxInterface>({
+    display: {
+      xs: "flex",
+      sm: "flex",
+      md: "flex",
+      lg: "flex",
+      xl: "flex",
+    },
     width: containerWidth,
     marginLeft: marginLeft,
     marginRight: marginRight,
-  };
+  });
 
-  if (layout === "Box") {
-    sx.justifyContent = "space-around";
-  }
+  // let sx: sxInterface = {
+  //   display: sxDefaultDisplay,
+  //   width: containerWidth,
+  //   marginLeft: marginLeft,
+  //   marginRight: marginRight,
+  // };
 
-  type displayType = keyof typeof sx.display;
+  type displayType = keyof typeof sxState.display;
 
-  if (hideBelow) {
-    let areAllSetToHide = false;
-    let hideBelowVal: displayType = hideBelow;
-    let display = sx.display;
-    for (let key in display) {
-      if (key === hideBelowVal) {
-        areAllSetToHide = true;
-      }
-      if (areAllSetToHide) break;
-      display[key as keyof typeof display] = "none";
-    }
-  }
-
-  if (hideAbove) {
-    let areAllSkipped = false;
-    let hideAboveVal: displayType = hideAbove;
-    let display = sx.display;
-    for (let key in display) {
-      if (key === hideAboveVal) {
-        areAllSkipped = true;
-      }
-      if (areAllSkipped) {
-        display[key as keyof typeof display] = "none";
-      }
-    }
-  }
+  // console.log(sx.display, "sx.display");
 
   const socMedItemProps =
     layout === "Grid"
@@ -201,9 +174,9 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
 
   const SocMedBoxContainerProps =
     layout === "Grid"
-      ? { sx, as: Grid, container: true }
+      ? { sx: sxState, as: Grid, container: true }
       : {
-          sx,
+          sx: sxState,
           as: Box,
         };
 
@@ -214,6 +187,49 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
     if (calculatedIconSize > 24) calculatedIconSize = 24;
     iconSize = `${calculatedIconSize}px`;
   }
+
+  useLayoutEffect(() => {
+    let sxClone = structuredClone(sxState);
+
+    console.log("running useEffect");
+    if (layout === "Box") sxClone.justifyContent = "space-around";
+
+    // console.log(key === hideBelowVal);
+
+    if (hideBelow) {
+      let areAllSetToHide = false;
+      let hideBelowVal: displayType = hideBelow;
+      let display = sxClone.display;
+      for (let key in display) {
+        if (key === hideBelowVal) {
+          areAllSetToHide = true;
+        }
+        if (areAllSetToHide) break;
+        // setSxState((prev) => {
+        sxClone.display[key] = "none";
+        // return prev;
+        // });
+      }
+    } else if (hideAbove) {
+      let areAllSkipped = false;
+      let hideAboveVal: displayType = hideAbove;
+      let display = sxClone.display;
+      for (let key in display) {
+        if (key === hideAboveVal) {
+          areAllSkipped = true;
+        }
+
+        if (areAllSkipped) {
+          // setSxState((prev) => {
+          sxClone.display[key] = "none";
+          // return prev;
+          // });
+        }
+      }
+    }
+
+    setSxState(sxClone);
+  }, []);
 
   return (
     <SocMedBoxContainer {...SocMedBoxContainerProps}>
