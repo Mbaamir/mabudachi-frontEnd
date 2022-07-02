@@ -1,4 +1,4 @@
-import SocialMedia from "./SocialMediaBox/SocialMedia";
+import SocialMedia from "./SocialMedia/SocialMedia";
 import Pages from "./Pages/Pages";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -51,7 +51,7 @@ const Navbar = () => {
           </IconButton>
         </Box>
 
-        <Pages layout="Box" containerWidth="30%"/>
+        <Pages layout="Box" containerWidth="30%" hideBelow="sm"/>
 
         {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
         <SocialMedia layout="Box" hideBelow="sm" />

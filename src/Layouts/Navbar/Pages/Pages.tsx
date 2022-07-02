@@ -14,6 +14,8 @@ import {
   HTMLAttributes,
   ElementType,
   Fragment,
+  useState,
+  useLayoutEffect
 } from "react";
 
 type gridItemWidth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 11 | 12;
@@ -117,19 +119,11 @@ const PageLinkGridItem: FC<pageLinkGridItemPropsInterface> = ({
 
 type justifyContentType = "space-between" | "space-around";
 
-const sxDefaultDisplay = {
-  xs: "flex",
-  sm: "flex",
-  md: "flex",
-  lg: "flex",
-  xl: "flex",
-};
-
 interface sxInterface {
   width?: string;
   marginLeft?: string;
   marginRight?: string;
-  display: typeof sxDefaultDisplay;
+  display: any;
   justifyContent?: justifyContentType;
 }
 
@@ -143,45 +137,22 @@ export default function Pages(props: PagesProps) {
   const marginLeft = props.marginLeft;
   const marginRight = props.marginRight;
 
-  let sx: sxInterface = {
-    display: sxDefaultDisplay,
+  const [sxState, setSxState] = useState<sxInterface>({
+    display: {
+      xs: "flex",
+      sm: "flex",
+      md: "flex",
+      lg: "flex",
+      xl: "flex",
+    },
     width: containerWidth,
     marginLeft: marginLeft,
     marginRight: marginRight,
-  };
+  });
 
-  if (layout === "Box") {
-    sx.justifyContent = "space-around";
-  }
 
-  type displayType = keyof typeof sx.display;
+  type displayType = keyof typeof sxState.display;
 
-  if (hideBelow) {
-    let areAllSetToHide = false;
-    let hideBelowVal: displayType = hideBelow;
-    let display = sx.display;
-    for (let key in display) {
-      if (key === hideBelowVal) {
-        areAllSetToHide = true;
-      }
-      if (areAllSetToHide) break;
-      display[key as keyof typeof display] = "none";
-    }
-  }
-
-  if (hideAbove) {
-    let areAllSkipped = false;
-    let hideAboveVal: displayType = hideAbove;
-    let display = sx.display;
-    for (let key in display) {
-      if (key === hideAboveVal) {
-        areAllSkipped = true;
-      }
-      if (areAllSkipped) {
-        display[key as keyof typeof display] = "none";
-      }
-    }
-  }
 
   const linkItemProps =
     layout === "Grid"
@@ -200,11 +171,47 @@ export default function Pages(props: PagesProps) {
 
   const PagesBoxContainerProps =
     layout === "Grid"
-      ? { sx, as: Grid, container: true }
-      : {
-          sx,
-          as: Box,
-        };
+        ? { sx: sxState, as: Grid, container: true }
+        : {
+            sx: sxState,
+            as: Box,
+          };
+
+
+        useLayoutEffect(() => {
+          let sxClone = structuredClone(sxState);
+      
+          if (layout === "Box") sxClone.justifyContent = "space-around";
+      
+          if (hideBelow) {
+            let areAllSetToHide = false;
+            let hideBelowVal: displayType = hideBelow;
+            let display = sxClone.display;
+            for (let key in display) {
+              if (key === hideBelowVal) {
+                areAllSetToHide = true;
+              }
+              if (areAllSetToHide) break;
+              sxClone.display[key] = "none";
+            }
+          } else if (hideAbove) {
+            let areAllSkipped = false;
+            let hideAboveVal: displayType = hideAbove;
+            let display = sxClone.display;
+            for (let key in display) {
+              if (key === hideAboveVal) {
+                areAllSkipped = true;
+              }
+      
+              if (areAllSkipped) {
+                sxClone.display[key] = "none";
+              }
+            }
+          }
+      
+          setSxState(sxClone);
+        }, []);
+      
 
   // const pageLinkProps =
   return (
