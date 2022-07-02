@@ -1,5 +1,5 @@
-// import Pages from "./Sections/Pages/Pages";
-import SocialMedia from "./Sections/SocialMedia/SocialMedia";
+import SocialMedia from "./SocialMedia/SocialMedia";
+import Pages from "./Pages/Pages";
 import NavbarDrawer from "./Drawer/Drawer";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -7,13 +7,11 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from "@mui/material";
-
 import { useState } from "react";
 
 interface styledNavbarPropsInterface extends AppBarProps {
   navbarColor?: string;
 }
-
 
 // Apply Styling to Navbar Here
 const StyledNavbar = styled(AppBar, {
@@ -28,8 +26,14 @@ const Navbar = () => {
   const [isDrawerOpenState, setIsDrawerOpenState] = useState(false);
   return (
     <StyledNavbar position="static" navbarColor="#080708">
-
       <Toolbar>
+        <NavbarDrawer
+          isDrawerOpen={isDrawerOpenState}
+          closeDrawerFunc={() => {
+            setIsDrawerOpenState(false);
+          }}
+        />
+
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
@@ -42,10 +46,10 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
         </Box>
-       
+
         {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
-        <SocialMedia layout="Box" hideBelow="sm" containerWidth="20%" marginLeft="auto"/>
-        {/* <Pages layout="Box" hideBelow="md" containerWidth="20%"/> */}
+        <Pages layout="Box" containerWidth="30%" hideBelow="sm" />
+        <SocialMedia layout="Box" hideBelow="sm" />
 
       </Toolbar>
     </StyledNavbar>
