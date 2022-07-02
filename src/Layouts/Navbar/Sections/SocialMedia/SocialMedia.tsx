@@ -186,7 +186,6 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
   useLayoutEffect(() => {
     let sxClone = structuredClone(sxState);
 
-    console.log("running useEffect");
     if (layout === "Box") sxClone.justifyContent = "space-around";
 
     if (hideBelow) {
