@@ -27,6 +27,7 @@ const Navbar = () => {
   return (
     <StyledNavbar position="static" navbarColor="#080708">
       <Toolbar>
+        {/* {Put Drawer Component Here} */}
         <NavbarDrawer
           isDrawerOpen={isDrawerOpenState}
           closeDrawerFunc={() => {
@@ -34,7 +35,18 @@ const Navbar = () => {
           }}
         />
 
-        <Box sx={{ display: { xs: "flex", md: "none" } }}>
+        {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
+        <Pages
+          layout="Box"
+          containerWidth="20%"
+          hideBelow="sm"
+          marginLeft="auto"
+          marginRight="5%"
+        />
+
+        <SocialMedia layout="Box" hideBelow="sm" />
+
+        <Box sx={{ display: { xs: "flex", sm: "none" }, marginLeft: "auto" }}>
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -46,16 +58,6 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
         </Box>
-
-        {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
-        <Pages
-          layout="Box"
-          containerWidth="20%"
-          hideBelow="sm"
-          marginLeft="auto"
-          marginRight="5%"
-        />
-        <SocialMedia layout="Box" hideBelow="sm" />
       </Toolbar>
     </StyledNavbar>
   );

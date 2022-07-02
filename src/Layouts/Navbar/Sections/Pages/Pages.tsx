@@ -39,7 +39,12 @@ type PageLinkProps = InternalPageLink | PageLinkBase;
 
 const PageLink = styled(Link, {
   shouldForwardProp: (prop) => {
-    return prop !== "linkColor" && prop !== "linkColorOnHover";
+    return (
+      prop !== "linkColor" &&
+      prop !== "linkColorOnHover" &&
+      prop !== "linkFontWeight" &&
+      prop !== "linkFontSize"
+    );
   },
 })<PageLinkProps>(
   ({ linkFontWeight, linkColor, linkFontSize, linkColorOnHover, theme }) => ({
