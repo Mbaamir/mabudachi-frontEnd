@@ -1,5 +1,4 @@
 import { Button, Typography } from "@mui/material";
-import SocialMedia from "../../Layouts/Navbar/SocialMedia/SocialMedia";
 // import {
 //   init,
 //   useConnectWallet,
