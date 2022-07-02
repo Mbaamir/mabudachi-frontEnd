@@ -14,6 +14,7 @@ interface styledNavbarPropsInterface extends AppBarProps {
   navbarColor?: string;
 }
 
+
 // Apply Styling to Navbar Here
 const StyledNavbar = styled(AppBar, {
   shouldForwardProp: (prop) => {
@@ -27,6 +28,7 @@ const Navbar = () => {
   const [isDrawerOpenState, setIsDrawerOpenState] = useState(false);
   return (
     <StyledNavbar position="static" navbarColor="#080708">
+
       <Toolbar>
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <IconButton
