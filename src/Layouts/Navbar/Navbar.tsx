@@ -34,7 +34,7 @@ const Navbar = () => {
           }}
         />
 
-        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+        <Box sx={{ display: { xs: "flex", md: "none" } }}>
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -48,9 +48,14 @@ const Navbar = () => {
         </Box>
 
         {/* Cannot HAVE hideBelow and hideAbove Prop at the same time */}
-        <Pages layout="Box" containerWidth="30%" hideBelow="sm" />
+        <Pages
+          layout="Box"
+          containerWidth="20%"
+          hideBelow="sm"
+          marginLeft="auto"
+          marginRight="5%"
+        />
         <SocialMedia layout="Box" hideBelow="sm" />
-
       </Toolbar>
     </StyledNavbar>
   );

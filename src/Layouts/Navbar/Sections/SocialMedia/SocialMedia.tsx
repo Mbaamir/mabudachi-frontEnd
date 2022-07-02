@@ -105,8 +105,6 @@ interface socMedItemPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
 
 type justifyContentType = "space-between" | "space-around";
 
-
-
 interface sxInterface {
   width?: string;
   marginLeft?: string;
@@ -123,7 +121,6 @@ const SocMedItem: FC<socMedItemPropsInterface> = ({
   return <Tag {...otherProps}>{children}</Tag>;
 };
 
-
 export default function SocialMedia(props: ISocialMediaBoxProps) {
   const layout = props.layout;
   const hideAbove = props.hideAbove;
@@ -134,7 +131,6 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
   const containerWidth = props.containerWidth;
   const marginLeft = props.marginLeft;
   const marginRight = props.marginRight;
-
 
   const [sxState, setSxState] = useState<sxInterface>({
     display: {
@@ -149,7 +145,6 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
     marginRight: marginRight,
   });
 
-
   type displayType = keyof typeof sxState.display;
 
   const socMedItemProps =
@@ -162,6 +157,9 @@ export default function SocialMedia(props: ISocialMediaBoxProps) {
           md: props.mdWidth,
           lg: props.lgWidth,
           xl: props.xlWidth,
+          sx: {
+            textAlign: "center",
+          },
         }
       : {
           as: Fragment,

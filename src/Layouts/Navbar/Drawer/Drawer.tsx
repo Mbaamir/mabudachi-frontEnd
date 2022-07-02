@@ -1,5 +1,5 @@
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
-// import Pages from "../Sections/Pages/Pages";
+import Pages from "../Sections/Pages/Pages";
 import Box from "@mui/material/Box";
 import SocialMedia from "../Sections/SocialMedia/SocialMedia";
 
@@ -18,22 +18,32 @@ export default function NavbarDrawer(props: INavbarDrawerProps) {
       open={isDrawerOpen}
       onClose={closeDrawerFunc}
     >
-      <Box sx={{ width: "70vw", height: "90%" }}>
-          {/* <Box sx={{ marginTop: "15%", height: "20%" }}> */}
-          {/* <Pages
-          layout="Box"
-          marginLeft="auto"
-          marginRight="auto"
-          containerWidth="50%"
-          containerHeight="20%"
-          flexDirection="column"
-          linkFontSize="30px"
-          hideAbove="sm"
-        /> */}
-        {/* </Box> */}
+      <Box sx={{ width: "70vw", height: "100vh" }}>
+        <div style={{ marginTop: "25%", marginBottom: "15%" }}>
+          <SocialMedia
+            layout="Grid"
+            hideAbove="md"
+            xsWidth={6}
+            iconSize="32px"
+            containerWidth="80%"
+            marginLeft="auto"
+            marginRight="auto"
+          />
+        </div>
 
-        <SocialMedia layout="Box" hideAbove="md"/>
-
+        <div style={{ textAlign: "center", height: "20%" }}>
+          <Pages
+            layout="Grid"
+            containerWidth="40%"
+            containerHeight="100%"
+            xsWidth={12}
+            marginLeft="auto"
+            marginRight="auto"
+            linkFontSize="1.8rem"
+            linkFontWeight="500"
+            hideAbove="sm"
+          />
+        </div>
       </Box>
     </Drawer>
   );

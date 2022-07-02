@@ -15,7 +15,7 @@ import {
   ElementType,
   Fragment,
   useState,
-  useLayoutEffect
+  useLayoutEffect,
 } from "react";
 
 type gridItemWidth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 11 | 12;
@@ -25,6 +25,8 @@ type breakpointsType = "xs" | "sm" | "md" | "lg" | "xl";
 interface PageLinkBase extends LinkProps {
   linkColor?: string;
   linkColorOnHover?: string;
+  linkFontSize?: string;
+  linkFontWeight?: string;
 }
 
 interface InternalPageLink extends PageLinkBase {
@@ -39,20 +41,27 @@ const PageLink = styled(Link, {
   shouldForwardProp: (prop) => {
     return prop !== "linkColor" && prop !== "linkColorOnHover";
   },
-})<PageLinkProps>(({ linkColor, theme, linkColorOnHover }) => ({
-  color: linkColor || theme.palette.primary.main,
-  "&:hover": {
-    color:
-      linkColorOnHover ||
-      theme.palette.primaryHighlight?.main ||
-      theme.palette.primary.light,
-  },
-}));
+})<PageLinkProps>(
+  ({ linkFontWeight, linkColor, linkFontSize, linkColorOnHover, theme }) => ({
+    color: linkColor || theme.palette.primary.main,
+    fontSize: linkFontSize,
+    fontWeight: linkFontWeight,
+    "&:hover": {
+      color:
+        linkColorOnHover ||
+        theme.palette.primaryHighlight?.main ||
+        theme.palette.primary.light,
+    },
+  })
+);
 
 interface PagesBaseInterface {
   linkColor?: string;
   linkColorOnHover?: string;
+  linkFontSize?: string;
+  linkFontWeight?: string;
   containerWidth?: string;
+  containerHeight?: string;
   marginLeft?: string;
   marginRight?: string;
 }
@@ -121,6 +130,7 @@ type justifyContentType = "space-between" | "space-around";
 
 interface sxInterface {
   width?: string;
+  height?: string;
   marginLeft?: string;
   marginRight?: string;
   display: any;
@@ -133,7 +143,10 @@ export default function Pages(props: PagesProps) {
   const hideBelow = props.hideBelow;
   const linkColor = props.linkColor;
   const linkColorOnHover = props.linkColorOnHover;
+  const linkFontSize = props.linkFontSize;
+  const linkFontWeight = props.linkFontWeight;
   const containerWidth = props.containerWidth;
+  const containerHeight = props.containerHeight;
   const marginLeft = props.marginLeft;
   const marginRight = props.marginRight;
 
@@ -146,13 +159,12 @@ export default function Pages(props: PagesProps) {
       xl: "flex",
     },
     width: containerWidth,
+    height: containerHeight,
     marginLeft: marginLeft,
     marginRight: marginRight,
   });
 
-
   type displayType = keyof typeof sxState.display;
-
 
   const linkItemProps =
     layout === "Grid"
@@ -171,47 +183,45 @@ export default function Pages(props: PagesProps) {
 
   const PagesBoxContainerProps =
     layout === "Grid"
-        ? { sx: sxState, as: Grid, container: true }
-        : {
-            sx: sxState,
-            as: Box,
-          };
+      ? { sx: sxState, as: Grid, container: true }
+      : {
+          sx: sxState,
+          as: Box,
+        };
 
+  useLayoutEffect(() => {
+    let sxClone = structuredClone(sxState);
 
-        useLayoutEffect(() => {
-          let sxClone = structuredClone(sxState);
-      
-          if (layout === "Box") sxClone.justifyContent = "space-around";
-      
-          if (hideBelow) {
-            let areAllSetToHide = false;
-            let hideBelowVal: displayType = hideBelow;
-            let display = sxClone.display;
-            for (let key in display) {
-              if (key === hideBelowVal) {
-                areAllSetToHide = true;
-              }
-              if (areAllSetToHide) break;
-              sxClone.display[key] = "none";
-            }
-          } else if (hideAbove) {
-            let areAllSkipped = false;
-            let hideAboveVal: displayType = hideAbove;
-            let display = sxClone.display;
-            for (let key in display) {
-              if (key === hideAboveVal) {
-                areAllSkipped = true;
-              }
-      
-              if (areAllSkipped) {
-                sxClone.display[key] = "none";
-              }
-            }
-          }
-      
-          setSxState(sxClone);
-        }, []);
-      
+    if (layout === "Box") sxClone.justifyContent = "space-around";
+
+    if (hideBelow) {
+      let areAllSetToHide = false;
+      let hideBelowVal: displayType = hideBelow;
+      let display = sxClone.display;
+      for (let key in display) {
+        if (key === hideBelowVal) {
+          areAllSetToHide = true;
+        }
+        if (areAllSetToHide) break;
+        sxClone.display[key] = "none";
+      }
+    } else if (hideAbove) {
+      let areAllSkipped = false;
+      let hideAboveVal: displayType = hideAbove;
+      let display = sxClone.display;
+      for (let key in display) {
+        if (key === hideAboveVal) {
+          areAllSkipped = true;
+        }
+
+        if (areAllSkipped) {
+          sxClone.display[key] = "none";
+        }
+      }
+    }
+
+    setSxState(sxClone);
+  }, []);
 
   // const pageLinkProps =
   return (
@@ -222,6 +232,8 @@ export default function Pages(props: PagesProps) {
               underline: "none",
               linkColor: linkColor,
               linkColorOnHover: linkColorOnHover,
+              linkFontSize: linkFontSize,
+              linkFontWeight: linkFontWeight,
               href: item.href,
               target: "_blank",
               rel: "noreferrer",
@@ -230,6 +242,8 @@ export default function Pages(props: PagesProps) {
               underline: "none",
               linkColor: linkColor,
               linkColorOnHover: linkColorOnHover,
+              linkFontSize: linkFontSize,
+              linkFontWeight: linkFontWeight,
               to: item.to,
               component: RouterLink,
             };
