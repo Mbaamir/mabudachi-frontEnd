@@ -1,6 +1,6 @@
-import NavbarDrawer from "./Drawer/Drawer";
+// import NavbarDrawer from "./Drawer/Drawer";
 import SocialMedia from "./Sections/SocialMedia/SocialMedia";
-import Pages from "./Sections/Pages/Pages";
+// import Pages from "./Sections/Pages/Pages";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
