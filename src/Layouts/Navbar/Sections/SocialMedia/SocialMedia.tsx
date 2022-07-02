@@ -1,4 +1,4 @@
-import socialMediaObjectsArray from "../../Inputs/SocialMedia/socialMedia";
+import socialMediaObjectsArray from "../../../Inputs/SocialMediaList/socialMediaList";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -10,6 +10,8 @@ import {
   HTMLAttributes,
   ElementType,
   Fragment,
+  useState,
+  useLayoutEffect,
 } from "react";
 
 type gridItemWidth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 | 11 | 12;
@@ -20,22 +22,35 @@ interface SmIconButtonProps extends IconButtonProps {
   href: string;
   iconColor?: string;
   iconSize?: string;
+  iconColorOnHover?: string;
   target: "_blank";
   rel: "noreferrer";
 }
 
 const SmIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => {
-    return prop !== "iconColor" && prop !== "iconSize";
+    return (
+      prop !== "iconColor" && prop !== "iconSize" && prop !== "iconColorOnHover"
+    );
   },
-})<SmIconButtonProps>(({ iconSize, iconColor, theme }) => ({
+})<SmIconButtonProps>(({ iconSize, iconColor, theme, iconColorOnHover }) => ({
   color: iconColor || theme.palette.primary.main,
   fontSize: iconSize || "24px",
+  "&:hover": {
+    color:
+      iconColorOnHover ||
+      theme.palette.primaryHighlight?.main ||
+      theme.palette.primary.light,
+  },
 }));
 
 export interface ISocialMediaBase {
   iconColor?: string;
   iconSize?: string;
+  iconColorOnHover?: string;
+  containerWidth?: string;
+  marginLeft?: string;
+  marginRight?: string;
 }
 
 export interface ISocialMediaBoxBase extends ISocialMediaBase {
@@ -67,12 +82,12 @@ type ISocialMediaBoxHideAbove = ISocialMediaBoxFixed & {
   hideAbove?: breakpointsType;
 };
 
-type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
-
 interface socMedContainerPropsInterface
   extends HTMLAttributes<HTMLOrSVGElement> {
   as: ComponentType;
 }
+
+type ISocialMediaBoxProps = ISocialMediaBoxHideBelow | ISocialMediaBoxHideAbove;
 
 const SocMedBoxContainer: FC<socMedContainerPropsInterface> = ({
   as: Tag = Box,
@@ -88,6 +103,18 @@ interface socMedItemPropsInterface extends HTMLAttributes<HTMLOrSVGElement> {
   xs?: number;
 }
 
+type justifyContentType = "space-between" | "space-around";
+
+
+
+interface sxInterface {
+  width?: string;
+  marginLeft?: string;
+  marginRight?: string;
+  display: any;
+  justifyContent?: justifyContentType;
+}
+
 const SocMedItem: FC<socMedItemPropsInterface> = ({
   as: Tag = Fragment,
   children,
@@ -96,47 +123,34 @@ const SocMedItem: FC<socMedItemPropsInterface> = ({
   return <Tag {...otherProps}>{children}</Tag>;
 };
 
-export default function SocialMediaBox(props: ISocialMediaBoxProps) {
-  // if (!socialMediaObjectsArray) return;
 
+export default function SocialMedia(props: ISocialMediaBoxProps) {
   const layout = props.layout;
   const hideAbove = props.hideAbove;
   const hideBelow = props.hideBelow;
+  const iconColor = props.iconColor;
+  const iconColorOnHover = props.iconColorOnHover;
+  let iconSize = props.iconSize;
+  const containerWidth = props.containerWidth;
+  const marginLeft = props.marginLeft;
+  const marginRight = props.marginRight;
 
-  let sx = {
-    display: { xs: "flex", sm: "flex", md: "flex", lg: "flex", xl: "flex" },
-  };
 
-  type displayType = keyof typeof sx.display;
+  const [sxState, setSxState] = useState<sxInterface>({
+    display: {
+      xs: "flex",
+      sm: "flex",
+      md: "flex",
+      lg: "flex",
+      xl: "flex",
+    },
+    width: containerWidth,
+    marginLeft: marginLeft,
+    marginRight: marginRight,
+  });
 
-  if (hideBelow) {
-    let areAllSetToHide = false;
-    let hideBelowVal: displayType = hideBelow;
-    let display = sx.display;
-    for (let key in display) {
-      if (key === hideBelowVal) {
-        areAllSetToHide = true;
-      }
-      if (areAllSetToHide) break;
-      display[key as keyof typeof display] = "none";
-      console.log(display);
-    }
-  }
 
-  if (hideAbove) {
-    let areAllSkipped = false;
-    let hideAboveVal: displayType = hideAbove;
-    let display = sx.display;
-    for (let key in display) {
-      if (key === hideAboveVal) {
-        areAllSkipped = true;
-      }
-      if (areAllSkipped) {
-        display[key as keyof typeof display] = "none";
-      }
-      console.log(display);
-    }
-  }
+  type displayType = keyof typeof sxState.display;
 
   const socMedItemProps =
     layout === "Grid"
@@ -155,14 +169,11 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
 
   const SocMedBoxContainerProps =
     layout === "Grid"
-      ? { sx, as: Grid }
+      ? { sx: sxState, as: Grid, container: true }
       : {
-          sx,
+          sx: sxState,
           as: Box,
         };
-
-  const iconColor = props.iconColor;
-  let iconSize = props.iconSize;
 
   if (!iconSize) {
     let numberOfIcons = socialMediaObjectsArray.length;
@@ -172,9 +183,43 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
     iconSize = `${calculatedIconSize}px`;
   }
 
+  useLayoutEffect(() => {
+    let sxClone = structuredClone(sxState);
+
+    if (layout === "Box") sxClone.justifyContent = "space-around";
+
+    if (hideBelow) {
+      let areAllSetToHide = false;
+      let hideBelowVal: displayType = hideBelow;
+      let display = sxClone.display;
+      for (let key in display) {
+        if (key === hideBelowVal) {
+          areAllSetToHide = true;
+        }
+        if (areAllSetToHide) break;
+        sxClone.display[key] = "none";
+      }
+    } else if (hideAbove) {
+      let areAllSkipped = false;
+      let hideAboveVal: displayType = hideAbove;
+      let display = sxClone.display;
+      for (let key in display) {
+        if (key === hideAboveVal) {
+          areAllSkipped = true;
+        }
+
+        if (areAllSkipped) {
+          sxClone.display[key] = "none";
+        }
+      }
+    }
+
+    setSxState(sxClone);
+  }, []);
+
   return (
     <SocMedBoxContainer {...SocMedBoxContainerProps}>
-      {socialMediaObjectsArray.map((item: any, index: number) => {
+      {socialMediaObjectsArray.map((item, index: number) => {
         return (
           <SocMedItem {...socMedItemProps} key={`${item.url}_${index}`}>
             <SmIconButton
@@ -183,6 +228,7 @@ export default function SocialMediaBox(props: ISocialMediaBoxProps) {
               rel="noreferrer"
               iconColor={iconColor}
               iconSize={iconSize}
+              iconColorOnHover={iconColorOnHover}
             >
               {createElement(item.icon)}
             </SmIconButton>
